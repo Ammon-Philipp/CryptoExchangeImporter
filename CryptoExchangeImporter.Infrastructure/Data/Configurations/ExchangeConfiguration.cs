@@ -11,8 +11,8 @@ public class ExchangeConfiguration : IEntityTypeConfiguration<Exchange>
     public void Configure(EntityTypeBuilder<Exchange> builder)
     {
         builder.ToTable("Exchanges");
-        
-        // TODO: Check length in PR.
+
+        // TODO: Check in PR: Length.
         builder.HasKey(e => e.Id);
         builder.Property(e => e.Id)
             .HasMaxLength(50)
