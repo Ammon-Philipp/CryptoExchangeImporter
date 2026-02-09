@@ -3,51 +3,41 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// Web
+builder.Services.AddControllersWithViews();
+
+// Infrastructure
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
                        throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-// Configure DbContext.
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+builder.Services.AddDbContext<ExchangeDbContext>(options => options.UseSqlServer(
                                                         connectionString,
                                                         b => b.MigrationsAssembly(
                                                             "CryptoExchangeImporter.Infrastructure"
                                                         )
                                                     )
 );
-
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-builder.Services.AddControllersWithViews();
+// Application
 
 var app = builder.Build();
 
 // TODO: Also for production?
-// Auto-application of database migrations on startup.
-using (var scope = app.Services.CreateScope())
+await using (var scope = app.Services.CreateAsyncScope())
 {
-    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var context = scope.ServiceProvider.GetRequiredService<ExchangeDbContext>();
     await context.Database.MigrateAsync();
 }
 
-// Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
+
 app.UseRouting();
 
-app.UseAuthorization();
-
-app.MapStaticAssets();
-
-app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}")
-   .WithStaticAssets();
+app.MapControllerRoute("default", "{controller=Home}/{action=Index}/{id?}");
 
 await app.RunAsync();
