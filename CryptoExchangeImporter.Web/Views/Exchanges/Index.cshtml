@@ -1,0 +1,27 @@
+﻿@model List<CryptoExchangeImporter.Web.ViewModels.ExchangeListItemViewModel>
+
+<h2>Exchanges</h2>
+
+<table class="table table-sm">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>CreatedAt</th>
+            <th>Crypto</th>
+            <th>Euro</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var x in Model)
+        {
+            <tr>
+                <td>@x.Id</td>
+                <td>@x.CreatedAt</td>
+                <td>@x.Crypto</td>
+                <td>@x.Euro</td>
+                <td><a asp-action="Details" asp-route-id="@x.Id">Details</a></td>
+            </tr>
+        }
+    </tbody>
+</table>

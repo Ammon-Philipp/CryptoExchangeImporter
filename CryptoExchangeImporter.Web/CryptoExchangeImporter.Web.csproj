@@ -19,7 +19,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Views\Exchanges\" />
 		<Folder Include="Views\Import\" />
 	</ItemGroup>
 

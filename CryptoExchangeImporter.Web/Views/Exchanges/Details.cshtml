@@ -1,0 +1,29 @@
+﻿@model CryptoExchangeImporter.Web.ViewModels.ExchangeDetailsViewModel
+
+<h2>Exchange @Model.Id</h2>
+<div><b>CreatedAt:</b> @Model.CreatedAt</div>
+<div><b>Funds:</b> Crypto=@Model.Crypto, Euro=@Model.Euro</div>
+
+<hr />
+
+<h3>Asks (Price ASC)</h3>
+<table class="table table-sm">
+    <thead><tr><th>Price</th><th>Amount</th><th>Time</th><th>OrderId</th></tr></thead>
+    <tbody>
+        @foreach (var o in Model.Asks)
+        {
+            <tr><td>@o.Price</td><td>@o.Amount</td><td>@o.Time</td><td>@o.OrderId</td></tr>
+        }
+    </tbody>
+</table>
+
+<h3>Bids (Price DESC)</h3>
+<table class="table table-sm">
+    <thead><tr><th>Price</th><th>Amount</th><th>Time</th><th>OrderId</th></tr></thead>
+    <tbody>
+        @foreach (var o in Model.Bids)
+        {
+            <tr><td>@o.Price</td><td>@o.Amount</td><td>@o.Time</td><td>@o.OrderId</td></tr>
+        }
+    </tbody>
+</table>
