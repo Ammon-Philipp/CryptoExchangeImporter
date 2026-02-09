@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace CryptoExchangeImporter.Domain.Entities;
+﻿namespace CryptoExchangeImporter.Domain.Entities;
 
 public class OrderBookEntry
 {
