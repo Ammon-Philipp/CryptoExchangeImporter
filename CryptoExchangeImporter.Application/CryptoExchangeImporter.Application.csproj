@@ -4,12 +4,11 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<ProjectReference Include="..\CryptoExchangeImporter.Domain\CryptoExchangeImporter.Domain.csproj" />
+	  <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.12" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Interfaces\" />
+		<ProjectReference Include="..\CryptoExchangeImporter.Domain\CryptoExchangeImporter.Domain.csproj" />
 	</ItemGroup>
 </Project>

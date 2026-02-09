@@ -9,7 +9,7 @@ public interface IExchangeRepository
 
     Task<AddExchangeResult> AddAsync(Exchange exchange, CancellationToken cancel);
 
-    Task<ICollection<Exchange>> GetAllAsync(CancellationToken cancel);
+    Task<IReadOnlyList<Exchange>> GetAllAsync(CancellationToken cancel);
 
     Task<Exchange?> GetByIdAsync(string id, CancellationToken cancel);
 }
@@ -18,5 +18,5 @@ public sealed class AddExchangeResult
 {
     public int ImportedExchanges { get; init; }
     public int ImportedOrders { get; init; }
-    public int SkippedDuplicates { get; init; }
+    public int SkippedDuplicateOrders { get; init; }
 }

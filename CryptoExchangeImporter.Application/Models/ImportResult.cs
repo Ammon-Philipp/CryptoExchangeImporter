@@ -6,7 +6,7 @@ public sealed class ImportResult
     public int SkippedExchanges { get; set; }
 
     public int ImportedOrders { get; set; }
-    public int SkippedDuplicates { get; set; }
+    public int SkippedDuplicateOrders { get; set; }
 
     public List<string> Errors { get; } = new();
 
