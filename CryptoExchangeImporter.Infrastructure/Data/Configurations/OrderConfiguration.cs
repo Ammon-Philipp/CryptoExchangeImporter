@@ -22,7 +22,9 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         builder.Property(o => o.OrderId)
             .IsRequired();
 
+        // TODO: Implement DateTimeOffset usage in service that handles import.
         builder.Property(o => o.Time)
+            .HasColumnType("datetimeoffset")
             .IsRequired();
 
         builder.Property(o => o.Type)
