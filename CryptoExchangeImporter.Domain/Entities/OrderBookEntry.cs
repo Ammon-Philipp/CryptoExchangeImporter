@@ -2,6 +2,14 @@
 
 public sealed class OrderBookEntry
 {
+    private OrderBookEntry() { } // EF Core
+
+    public OrderBookEntry(bool isBid, Order order)
+    {
+        Order = order ?? throw new ArgumentNullException(nameof(order));
+        IsBid = isBid;
+    }
+
     public int Id { get; private set; }
     // TODO: Add ADR? => Avoid separate tables and Unions for EF Core queries. Use enum instead for more than two collections.
     // TODO: Check in PR: Decision ok? How to prevent inconsistent state? => Make sure only Bid Order gets IsBid = true!
@@ -13,14 +21,6 @@ public sealed class OrderBookEntry
 
     // Navigation Properties
     public OrderBook OrderBook { get; private set; } = default!;
-
     public Order Order { get; private set; } = default!;
-
-    private OrderBookEntry() { } // EF Core
-
-    public OrderBookEntry(bool isBid, Order order)
-    {
-        Order = order ?? throw new ArgumentNullException(nameof(order));
-        IsBid = isBid;
-    }
 }
+
