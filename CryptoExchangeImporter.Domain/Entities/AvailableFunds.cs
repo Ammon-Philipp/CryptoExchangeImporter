@@ -9,5 +9,5 @@ public sealed class
 
     // FK
     public int ExchangeId { get; set; }
-    public Exchange Exchange { get; set; }
+    public Exchange Exchange { get; set; } = default!;
 }
