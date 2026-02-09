@@ -1,13 +1,21 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public sealed class
-    AvailableFunds // TODO: Check in PR: Record due to Value Object. => Here class due to EF Core pragmatism (easier mapping / update / tracking).
+// TODO: Check in PR: Could be record as of being a Value Object. => Here class due to EF Core pragmatism (easier mapping / update / tracking).
+public sealed class AvailableFunds
 {
-    public int Id { get; set; }
-    public decimal Crypto { get; set; }
-    public decimal Euro { get; set; }
+    private AvailableFunds() { } // EF
+
+    internal AvailableFunds(decimal crypto, decimal euro)
+    {
+        Crypto = crypto;
+        Euro = euro;
+    }
+
+    public int Id { get; private set; }
+    public decimal Crypto { get; private set; }
+    public decimal Euro { get; private set; }
 
     // FK
-    public int ExchangeId { get; set; }
-    public Exchange Exchange { get; set; } = default!;
+    public int ExchangeId { get; private set; }
+    public Exchange Exchange { get; private set; } = default!;
 }

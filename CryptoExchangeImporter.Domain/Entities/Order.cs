@@ -5,21 +5,21 @@ public sealed class Order
     // EF Core.
     private Order() { }
 
-    public Order(Guid orderId,
+    internal Order(Guid orderId,
                  DateTimeOffset time,
                  OrderType type,
                  OrderKind kind,
                  decimal amount,
-                 decimal price
-    )
+                 decimal price)
     {
-        if (orderId == Guid.Empty) { throw new ArgumentException("OrderId must not be empty.", nameof(orderId)); }
+        if (orderId == Guid.Empty)
+        {
+            throw new ArgumentException("OrderId must not be empty.", nameof(orderId));
+        }
 
         if (time > DateTimeOffset.UtcNow)
         {
-            throw new ArgumentException("Order time cannot be in the future",
-                                        nameof(time)
-            ); // TODO: Check in PR if DateTimeOffset.UtcNow.AddMinutes(5)) is recommended to handle server time sync issues.
+            throw new ArgumentException("Order time cannot be in the future", nameof(time));
         }
 
         if (amount <= 0)
@@ -33,7 +33,7 @@ public sealed class Order
         }
 
         OrderId = orderId;
-        Time    = time.ToUniversalTime(); // Ensure UTC.
+        Time    = time.ToUniversalTime().ToOffset(TimeSpan.Zero);
         Type    = type;
         Kind    = kind;
         Amount  = amount;
@@ -46,7 +46,6 @@ public sealed class Order
     public Guid OrderId { get; private set; } // Data type for type safety, performance and matching JSON data type.
 
     // TODO: Check in PR: Time and Type are SQL reserved words.
-    // TODO: Implement DateTimeOffset usage in import service.
     public DateTimeOffset Time { get; private set; }
     public OrderType Type { get; private set; } // Data type for type safety, performance, Clean Architecture.
     public OrderKind Kind { get; private set; } // Data type for type safety, performance, Clean Architecture.

@@ -1,4 +1,5 @@
 ﻿using CryptoExchangeImporter.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -16,16 +17,14 @@ public class OrderBookConfiguration : IEntityTypeConfiguration<OrderBook>
                .HasMaxLength(50) // TODO: Check in PR.
                .IsRequired();
 
-        // 1:N relation to Bids.
-        builder.HasMany(ob => ob.Bids)
+        // 1:N relation to OrderBookEntry.
+        builder.HasMany<OrderBookEntry>()
                .WithOne(obe => obe.OrderBook)
                .HasForeignKey(obe => obe.OrderBookId)
-               .OnDelete(DeleteBehavior.Cascade); // Ensure db integrity.
+               .OnDelete(DeleteBehavior.Cascade);   // Ensure db integrity.
 
-        // 1:N relation to Asks.
-        builder.HasMany(ob => ob.Asks)
-               .WithOne(obe => obe.OrderBook)
-               .HasForeignKey(obe => obe.OrderBookId)
-               .OnDelete(DeleteBehavior.Cascade); // Ensure db integrity.
+        // Ignore Bids and Asks as there is only a relationship between OrderBook and OrderBookEntry.
+        builder.Ignore(ob => ob.Bids);
+        builder.Ignore(ob => ob.Asks);
     }
 }

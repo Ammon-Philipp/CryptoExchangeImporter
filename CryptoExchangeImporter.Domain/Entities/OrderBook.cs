@@ -2,12 +2,34 @@
 
 public sealed class OrderBook
 {
-    public int Id { get; set; }
+    private readonly List<OrderBookEntry> _bids = new();
+    private readonly List<OrderBookEntry> _asks = new();
 
-    // Navigation Properties
-    public int ExchangeId { get; set; }
-    public Exchange Exchange { get; set; } = default!;
+    // Private constructor for EF Core
+    private OrderBook() { }
 
-    public ICollection<OrderBookEntry> Bids { get; set; } = new List<OrderBookEntry>();
-    public ICollection<OrderBookEntry> Asks { get; set; } = new List<OrderBookEntry>();
+    internal OrderBook(int exchangeId)
+    {
+        ExchangeId = exchangeId;
+    }
+
+    public int Id { get; private set; }
+    public int ExchangeId { get; private set; }
+    public IReadOnlyCollection<OrderBookEntry> Bids => _bids.AsReadOnly(); // TODO: Check if AsReadOnly() is good here.
+    public IReadOnlyCollection<OrderBookEntry> Asks => _asks.AsReadOnly(); // TODO: Check if AsReadOnly() is good here.
+
+    // Navigation Property
+    public Exchange Exchange { get; private set; } = default!;
+
+    public void AddBid(Order order)
+    {
+        ArgumentNullException.ThrowIfNull(order); // TODO: Check if helpful.
+        _bids.Add(new OrderBookEntry(order, isBid: true));
+    }
+
+    public void AddAsk(Order order)
+    {
+        ArgumentNullException.ThrowIfNull(order); // TODO: Check if helpful.
+        _asks.Add(new OrderBookEntry(order, isBid: false));
+    }
 }

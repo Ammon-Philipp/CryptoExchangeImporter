@@ -1,4 +1,5 @@
 ﻿using CryptoExchangeImporter.Domain.Entities;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -11,13 +12,20 @@ public class ExchangeConfiguration : IEntityTypeConfiguration<Exchange>
     {
         builder.ToTable("Exchanges");
 
-        // TODO: Check in PR: Length.
         builder.HasKey(e => e.Id);
-        builder.Property(e => e.Id)
+
+        // Ensure idempotency via unique index on ExchangeId. Enables performance via filtered index.
+        builder.HasIndex(e => e.ExchangeId)
+               .IsUnique()
+               .HasDatabaseName("IX_Exchanges_ExchangeId"); // TODO: Check db implementation.
+
+        // TODO: Check in PR: Length.
+        builder.Property(e => e.ExchangeId)
                .HasMaxLength(50)
                .IsRequired();
 
         builder.Property(e => e.CreatedAt)
+               .HasColumnType("datetimeoffset")
                .IsRequired();
 
         // 1:1 relation to AvailableFunds.
