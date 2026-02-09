@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Reflection.Emit;
-using System.Text;
+﻿using System.Reflection;
 
 using CryptoExchangeImporter.Domain.Entities;
+
+using Microsoft.EntityFrameworkCore;
 
 namespace CryptoExchangeImporter.Infrastructure.Data;
 
@@ -28,5 +26,4 @@ public class ApplicationDbContext : DbContext
         // TODO: Use Fluent API to configure the entity relationships.
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
     }
-}
 }
