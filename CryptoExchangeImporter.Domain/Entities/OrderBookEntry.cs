@@ -7,7 +7,8 @@ namespace CryptoExchangeImporter.Domain.Entities;
 public class OrderBookEntry
 {
     public int Id { get; set; }
-    public bool IsBid { get; set; } // true = Bid, false = Ask
+    // TODO: Add ADR?
+    public bool IsBid { get; set; } // true = Bid, false = Ask => Avoid junction table.
 
     // Foreign Key
     public int OrderBookId { get; set; }
