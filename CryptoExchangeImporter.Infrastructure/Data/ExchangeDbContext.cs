@@ -4,10 +4,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CryptoExchangeImporter.Infrastructure.Data;
 
-public class ApplicationDbContext : DbContext
+public class ExchangeDbContext : DbContext
 {
-    // TODO: Register in Program.cs.
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ExchangeDbContext(DbContextOptions<ExchangeDbContext> options)
         : base(options) { }
 
     public DbSet<Exchange> Exchanges => Set<Exchange>();
@@ -18,9 +17,7 @@ public class ApplicationDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        base.OnModelCreating(modelBuilder);
-
-        // TODO: Use Fluent API to configure the entity relationships.
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        base.OnModelCreating(modelBuilder);
     }
 }
