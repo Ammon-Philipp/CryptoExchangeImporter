@@ -47,21 +47,28 @@ public sealed class ExchangeJsonParser : IExchangeJsonParser
         {
             errors.Add("OrderBook is required.");
         }
-
-        var bids = dto.OrderBook?.Bids ?? new List<OrderBookEntryDto>();
-        var asks = dto.OrderBook?.Asks ?? new List<OrderBookEntryDto>();
-
-        ValidateEntries(bids, "Bids", errors);
-        ValidateEntries(asks, "Asks", errors);
-
-        // Make sure lists are never null per default.
-        if (dto.OrderBook is not null)
+        else
         {
+            // Check if Bids / Asks is missing.
+            if (dto.OrderBook.Bids is null)
+            {
+                errors.Add("OrderBook.Bids is required.");
+            }
+
+            if (dto.OrderBook.Asks is null)
+            {
+                errors.Add("OrderBook.Asks is required.");
+            }
+
+            // Make sure lists are never null per default.
             dto.OrderBook.Bids ??= new List<OrderBookEntryDto>();
             dto.OrderBook.Asks ??= new List<OrderBookEntryDto>();
+
+            ValidateEntries(dto.OrderBook.Bids, "Bids", errors);
+            ValidateEntries(dto.OrderBook.Asks, "Asks", errors);
         }
 
-        return (Dto: errors.Count == 0 ? dto : dto, Errors: errors);
+        return (dto, errors);
     }
 
     private static void ValidateEntries(IEnumerable<OrderBookEntryDto> dtoEntries, string name, List<string> errors)
