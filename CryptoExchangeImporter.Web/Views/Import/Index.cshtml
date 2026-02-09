@@ -1,0 +1,31 @@
+﻿@model CryptoExchangeImporter.Web.ViewModels.UploadResultViewModel
+
+<h2>Import</h2>
+
+<form asp-action="Upload" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div class="mb-3">
+        <input class="form-control" type="file" name="file" />
+    </div>
+    <button class="btn btn-primary" type="submit">Upload</button>
+</form>
+
+<hr/>
+
+@if (Model.Errors.Count > 0)
+{
+    <div class="alert alert-danger">
+        <ul>
+            @foreach (var e in Model.Errors) { <li>@e</li> }
+        </ul>
+    </div>
+}
+else if (Model.ImportedExchanges > 0 || Model.SkippedExchanges > 0)
+{
+    <div class="alert alert-success">
+        <div>Imported exchanges: @Model.ImportedExchanges</div>
+        <div>Skipped exchanges: @Model.SkippedExchanges</div>
+        <div>Imported orders: @Model.ImportedOrders</div>
+        <div>Skipped duplicate orders: @Model.SkippedDuplicateOrders</div>
+    </div>
+}

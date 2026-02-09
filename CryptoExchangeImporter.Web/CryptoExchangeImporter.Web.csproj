@@ -18,4 +18,9 @@
 		<ProjectReference Include="..\CryptoExchangeImporter.Infrastructure\CryptoExchangeImporter.Infrastructure.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+		<Folder Include="Views\Exchanges\" />
+		<Folder Include="Views\Import\" />
+	</ItemGroup>
+
 </Project>
