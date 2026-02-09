@@ -1,3 +1,4 @@
+// TODO: Move to Infrastructure and use via DI?
 using CryptoExchangeImporter.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,6 +18,15 @@ builder.Services.AddDbContext<ExchangeDbContext>(options => options.UseSqlServer
                                                     )
 );
 // Application
+builder.Services.AddScoped<CryptoExchangeImporter.Application.Parsing.IExchangeJsonParser,
+    CryptoExchangeImporter.Application.Parsing.ExchangeJsonParser>();
+
+// TODO: Preparing, Currently implementing.
+builder.Services.AddScoped<CryptoExchangeImporter.Application.Services.ExchangeImportService>();
+
+// TODO: Preparing. Currentlö impementing.
+builder.Services.AddScoped<CryptoExchangeImporter.Application.Interfaces.IExchangeRepository,
+    CryptoExchangeImporter.Infrastructure.Repositories.ExchangeRepository>();
 
 var app = builder.Build();
 
