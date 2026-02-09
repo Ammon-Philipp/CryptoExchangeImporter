@@ -2,6 +2,5 @@
   <Project Path="CryptoExchangeImporter.Application/CryptoExchangeImporter.Application.csproj" />
   <Project Path="CryptoExchangeImporter.Domain/CryptoExchangeImporter.Domain.csproj" />
   <Project Path="CryptoExchangeImporter.Infrastructure/CryptoExchangeImporter.Infrastructure.csproj" />
-  <Project Path="CryptoExchangeImporter.Tests/CryptoExchangeImporter.Tests.csproj" />
   <Project Path="CryptoExchangeImporter.Web/CryptoExchangeImporter.Web.csproj" Id="50b5080f-c905-49d4-94d7-267ace0085fd" />
 </Solution>
