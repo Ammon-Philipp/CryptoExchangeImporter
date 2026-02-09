@@ -4,6 +4,14 @@ using System.Text;
 
 public class Order
 {
+    // TODO: Enforce immutability - FINANCE domain!
+    // TODO: Choice: Record type? Init-Only Setter?
+    // TODO: Also adapt in OrderConfiguration => EF Core must handle immutable entities correctly.
+    // TODO: Also adapt JSON Deserialization.
+    // TODO: Also adapt domain logic => ctor with validation?
+    // TODO: => Then also remember EF Core needs to work with ctor!
+    // TODO: => Then also adapt OrderBookEntry.
+
     public int Id { get; set; }
     // Natural key from JSON (unique).
     public Guid OrderId { get; set; }     // For type safety, performance and matching JSON data type.
