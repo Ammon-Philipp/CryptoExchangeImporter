@@ -1,6 +1,6 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public class OrderBook
+public sealed class OrderBook
 {
     public int Id { get; set; }
 

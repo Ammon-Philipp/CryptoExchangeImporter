@@ -1,6 +1,6 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public class AvailableFunds
+public sealed class AvailableFunds
 {
     public int Id { get; set; }
     public decimal Crypto { get; set; }

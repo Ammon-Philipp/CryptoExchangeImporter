@@ -1,6 +1,6 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public class Order
+public sealed class Order
 {
     // TODO: Enforce immutability - FINANCE domain!
     // TODO: Choice: Record type? Init-Only Setter?

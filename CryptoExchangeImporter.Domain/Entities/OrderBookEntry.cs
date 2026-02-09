@@ -1,6 +1,6 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public class OrderBookEntry
+public sealed class OrderBookEntry
 {
     public int Id { get; set; }
     // TODO: Add ADR?

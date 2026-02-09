@@ -1,6 +1,6 @@
 ﻿namespace CryptoExchangeImporter.Domain.Entities;
 
-public class Exchange
+public sealed class Exchange
 {
     public int Id { get; set; }
     public DateTime CreatedAt { get; set; }
