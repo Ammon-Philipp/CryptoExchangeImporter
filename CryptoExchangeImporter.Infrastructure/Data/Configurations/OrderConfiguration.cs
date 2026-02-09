@@ -15,33 +15,33 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
         // TODO: Check in PR: Compare Unique index with unique constraint.
         // Ensure idempotency via unique index on OrderId. Enables performance via filtered index.
         builder.HasIndex(o => o.OrderId)
-            .IsUnique()
-            .HasDatabaseName("IX_Orders_OrderId");  // TODO: Check db implementation.
+               .IsUnique()
+               .HasDatabaseName("IX_Orders_OrderId"); // TODO: Check db implementation.
 
         builder.Property(o => o.OrderId)
-            .IsRequired();
+               .IsRequired();
 
         // TODO: Implement DateTimeOffset usage in service that handles import.
         builder.Property(o => o.Time)
-            .HasColumnType("datetimeoffset")
-            .IsRequired();
+               .HasColumnType("datetimeoffset")
+               .IsRequired();
 
         builder.Property(o => o.Type)
-            .HasConversion<string>()
-            .HasMaxLength(10)
-            .IsRequired();
+               .HasConversion<string>()
+               .HasMaxLength(10)
+               .IsRequired();
 
         builder.Property(o => o.Kind)
-            .HasConversion<string>()
-            .HasMaxLength(50)                   // For longer names, e.g. 'Time-Weighted Average Price'
-            .IsRequired();
+               .HasConversion<string>()
+               .HasMaxLength(50) // For longer names, e.g. 'Time-Weighted Average Price'
+               .IsRequired();
 
         builder.Property(o => o.Amount)
-            .HasColumnType("decimal(18,8)")     // Reflects AvailableFunds decimal precision. => Only BTC.
-            .IsRequired();
+               .HasColumnType("decimal(18,8)") // Reflects AvailableFunds decimal precision. => Only BTC.
+               .IsRequired();
 
         builder.Property(o => o.Price)
-            .HasColumnType("decimal(18,2)")
-            .IsRequired();
+               .HasColumnType("decimal(18,2)")
+               .IsRequired();
     }
 }

@@ -1,5 +1,4 @@
 ﻿using CryptoExchangeImporter.Domain.Entities;
-
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -14,12 +13,12 @@ public class OrderBookEntryConfiguration : IEntityTypeConfiguration<OrderBookEnt
         builder.HasKey(entry => entry.Id);
 
         builder.Property(entry => entry.IsBid)
-            .IsRequired();
+               .IsRequired();
 
         // 1:1 relation to Order.
         builder.HasOne(entry => entry.Order)
-            .WithOne(o => o.OrderBookEntry)
-            .HasForeignKey<Order>(o => o.OrderBookEntryId)
-            .OnDelete(DeleteBehavior.Cascade); // Ensure db integrity.
+               .WithOne(o => o.OrderBookEntry)
+               .HasForeignKey<Order>(o => o.OrderBookEntryId)
+               .OnDelete(DeleteBehavior.Cascade); // Ensure db integrity.
     }
 }

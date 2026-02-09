@@ -6,7 +6,7 @@ public sealed class OrderBook
 
     // Navigation Properties
     public int ExchangeId { get; set; }
-    public Exchange Exchange { get; set; }
+    public Exchange Exchange { get; set; } = default!;
 
     public ICollection<OrderBookEntry> Bids { get; set; } = new List<OrderBookEntry>();
     public ICollection<OrderBookEntry> Asks { get; set; } = new List<OrderBookEntry>();
