@@ -17,6 +17,10 @@
     <ProjectReference Include="..\CryptoExchangeImporter.Domain\CryptoExchangeImporter.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Data\Configurations\Migrations\" />
+  </ItemGroup>
+
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
