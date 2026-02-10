@@ -16,6 +16,9 @@ public sealed class ExchangeRepository : IExchangeRepository
     public Task<bool> ExistsAsync(string exchangeId, CancellationToken cancel)
         => _db.Exchanges.AsNoTracking().AnyAsync(x => x.ExchangeId == exchangeId, cancel);
 
+    #region NeedsRefactoring
+    // TODO: Fix duplication handling.
+
     public async Task<AddExchangeResult> AddAsync(Exchange exchange, CancellationToken cancel)
     {
         // Import whole exchange or nnothin at all.
@@ -64,4 +67,6 @@ public sealed class ExchangeRepository : IExchangeRepository
 
     private static int CountOrders(Exchange exchange)
         => (exchange.OrderBook?.Bids?.Count ?? 0) + (exchange.OrderBook?.Asks?.Count ?? 0);
+    
+    #endregion NeedsRefactoring
 }

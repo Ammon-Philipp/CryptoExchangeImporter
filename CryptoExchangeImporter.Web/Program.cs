@@ -21,10 +21,8 @@ builder.Services.AddDbContext<ExchangeDbContext>(options => options.UseSqlServer
 builder.Services.AddScoped<CryptoExchangeImporter.Application.Parsing.IExchangeJsonParser,
     CryptoExchangeImporter.Application.Parsing.ExchangeJsonParser>();
 
-// TODO: Preparing, Currently implementing.
 builder.Services.AddScoped<CryptoExchangeImporter.Application.Services.ExchangeImportService>();
 
-// TODO: Preparing. Currentlö impementing.
 builder.Services.AddScoped<CryptoExchangeImporter.Application.Interfaces.IExchangeRepository,
     CryptoExchangeImporter.Infrastructure.Repositories.ExchangeRepository>();
 

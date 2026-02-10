@@ -90,7 +90,6 @@ public sealed class ExchangeImportService
         exchange.SetAvailableFunds(funds);
         var orderBook = new OrderBook();
 
-        // TODO: Finish up entity rebuild.
         foreach (var bidDto in dto.OrderBook.Bids!)
         {
             orderBook.AddBid(MapOrder(bidDto));
