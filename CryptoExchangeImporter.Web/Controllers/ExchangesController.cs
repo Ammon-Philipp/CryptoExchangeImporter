@@ -56,17 +56,19 @@ public sealed class ExchangesController : Controller
             Asks = asks
         };
 
-        // TODO: Correct.
         return View(vm);
+    }
 
-        // TODO: Change and check parameter type as of Clean Architecture
-        static OrderRowViewModel OrderRow(Order order)
+    static OrderRowViewModel OrderRow(Order order)
+    {
+        return new OrderRowViewModel()
         {
-            return new OrderRowViewModel()
-            {
-                // TODO: Implement.
-            };
-        }
-
+            OrderId = order.OrderId,
+            Time    = order.Time,
+            Type    = order.Type.ToString(),
+            Kind    = order.Kind.ToString(),
+            Amount  = order.Amount,
+            Price   = order.Price
+        };
     }
 }
