@@ -10,16 +10,15 @@ public class OrderBookConfiguration : IEntityTypeConfiguration<OrderBook>
     public void Configure(EntityTypeBuilder<OrderBook> builder)
     {
         builder.ToTable("OrderBooks");
-
         builder.HasKey(ob => ob.Id);
 
         builder.Property(ob => ob.ExchangeId)
                .IsRequired();
 
-        // 1:N relation to OrderBookEntry.
-        builder.HasMany<OrderBookEntry>()
-               .WithOne(obe => obe.OrderBook)
-               .HasForeignKey(obe => obe.OrderBookId)
+        // EF uses backing field here as Bids and Asks are only projections, no tables.
+        builder.HasMany<OrderBookEntry>("_entries")
+               .WithOne(e => e.OrderBook)
+               .HasForeignKey(e => e.OrderBookId)
                .OnDelete(DeleteBehavior.Cascade);   // Ensure db integrity.
 
         // Ignore Bids and Asks as there is only a relationship between OrderBook and OrderBookEntry.
