@@ -4,5 +4,6 @@ public enum OrderKind
 {
     Limit,
     Market,
-    Stop
+    Stop,
+    Unknown
 }
