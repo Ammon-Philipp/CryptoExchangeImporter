@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 using CryptoExchangeImporter.Application.DTOs;
+using CryptoExchangeImporter.Domain.Enums;
 
 namespace CryptoExchangeImporter.Application.Parsing;
 
@@ -89,10 +90,31 @@ public sealed class ExchangeJsonParser : IExchangeJsonParser
             {
                 errors.Add($"{name}[{currIndex}].Order.Type is required.");
             }
+            else
+            {
+                var raw = o.Type.Trim();
+
+                if (!raw.Equals("buy", StringComparison.OrdinalIgnoreCase) &&
+                    !raw.Equals("sell", StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add($"{name}[{currIndex}].Order.Type must be 'Buy' or 'Sell' (was '{o.Type}').");
+                }
+            }
 
             if (string.IsNullOrWhiteSpace(o.Kind))
             {
                 errors.Add($"{name}[{currIndex}].Order.Kind is required.");
+            }
+            else
+            {
+                var raw = o.Kind.Trim();
+
+                if (!raw.Equals("limit", StringComparison.OrdinalIgnoreCase) &&
+                    !raw.Equals("market", StringComparison.OrdinalIgnoreCase) &&
+                    !raw.Equals("stop", StringComparison.OrdinalIgnoreCase))
+                {
+                    errors.Add($"{name}[{currIndex}].Order.Kind must be 'Buy' or 'Sell' (was '{o.Kind}').");
+                }
             }
 
             if (o.Amount < 0)
