@@ -22,7 +22,6 @@ public class AvailableFundsConfiguration : IEntityTypeConfiguration<AvailableFun
                .IsRequired();
 
         builder.Property(af => af.ExchangeId)
-               .HasMaxLength(50)
                .IsRequired();
     }
 }

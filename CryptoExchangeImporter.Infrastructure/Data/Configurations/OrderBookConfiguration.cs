@@ -14,7 +14,6 @@ public class OrderBookConfiguration : IEntityTypeConfiguration<OrderBook>
         builder.HasKey(ob => ob.Id);
 
         builder.Property(ob => ob.ExchangeId)
-               .HasMaxLength(50) // TODO: Check in PR.
                .IsRequired();
 
         // 1:N relation to OrderBookEntry.
