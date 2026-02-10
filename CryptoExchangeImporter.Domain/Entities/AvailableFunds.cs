@@ -5,7 +5,7 @@ public sealed class AvailableFunds
 {
     private AvailableFunds() { } // EF
 
-    internal AvailableFunds(decimal crypto, decimal euro)
+    public AvailableFunds(decimal crypto, decimal euro)
     {
         Crypto = crypto;
         Euro = euro;

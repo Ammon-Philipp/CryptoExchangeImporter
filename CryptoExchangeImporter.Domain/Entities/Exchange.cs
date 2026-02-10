@@ -4,7 +4,7 @@ public sealed class Exchange
 {
     private Exchange() { }
 
-    internal Exchange(string exchangeId, DateTimeOffset createdAt)
+    public Exchange(string exchangeId, DateTimeOffset createdAt)
     {
         if (string.IsNullOrWhiteSpace(exchangeId))
         {
@@ -30,4 +30,14 @@ public sealed class Exchange
     // Navigation Properties
     public AvailableFunds AvailableFunds { get; private set; } = default!;
     public OrderBook OrderBook { get; private set; } = default!;
+
+    public void SetAvailableFunds(AvailableFunds funds)
+    {
+        AvailableFunds = funds ?? throw new ArgumentException("Available funds must not be null.", nameof(funds));
+    }
+
+    public void SetOrderBook(OrderBook orderBook)
+    {
+        OrderBook = orderBook ?? throw new ArgumentException("Order book must not be null.", nameof(orderBook));
+    }
 }

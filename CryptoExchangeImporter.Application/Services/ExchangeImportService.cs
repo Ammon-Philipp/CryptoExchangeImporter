@@ -79,24 +79,23 @@ public sealed class ExchangeImportService
         var exchange = new Exchange(dto.Id!, DateTimeOffset.UtcNow);
 
         var funds = new AvailableFunds(
-            exchangeId: exchange.Id,     // DB-PK (int) => geht erst NACH SaveChanges wirklich
             crypto: dto.AvailableFunds.Crypto,
             euro: dto.AvailableFunds.Euro
         );
 
         exchange.SetAvailableFunds(funds);
+        var orderBook = new OrderBook();
 
         // TODO: Finish up entity rebuild.
-        foreach (var bid in dto.OrderBook.Bids!)
+        foreach (var bidDto in dto.OrderBook.Bids!)
         {
-            orderBook.AddBid(bid /*, exchange.Id etc.*/);
+            orderBook.AddBid(MapOrder(bidDto));
         }
 
-        foreach (var ask in dto.OrderBook.Asks!)
+        foreach (var askDto in dto.OrderBook.Asks!)
         {
-            orderBook.AddAsk(ask /*, exchange.Id etc.*/);
+            orderBook.AddAsk(MapOrder(askDto));
         }
-
 
         exchange.SetOrderBook(orderBook);
 

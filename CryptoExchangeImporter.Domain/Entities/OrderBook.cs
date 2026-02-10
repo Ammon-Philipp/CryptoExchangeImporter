@@ -5,13 +5,7 @@ public sealed class OrderBook
     private readonly List<OrderBookEntry> _bids = new();
     private readonly List<OrderBookEntry> _asks = new();
 
-    // Private constructor for EF Core
-    private OrderBook() { }
-
-    internal OrderBook(int exchangeId)
-    {
-        ExchangeId = exchangeId;
-    }
+    public OrderBook() { }
 
     public int Id { get; private set; }
     public int ExchangeId { get; private set; }
@@ -23,13 +17,14 @@ public sealed class OrderBook
 
     public void AddBid(Order order)
     {
-        ArgumentNullException.ThrowIfNull(order); // TODO: Check if helpful.
+        ArgumentNullException.ThrowIfNull(order);
         _bids.Add(new OrderBookEntry(order, isBid: true));
     }
 
     public void AddAsk(Order order)
     {
-        ArgumentNullException.ThrowIfNull(order); // TODO: Check if helpful.
+        ArgumentNullException.ThrowIfNull(order);
         _asks.Add(new OrderBookEntry(order, isBid: false));
     }
 }
+
