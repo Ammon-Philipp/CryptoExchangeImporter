@@ -1,7 +1,11 @@
-﻿using CryptoExchangeImporter.Application.Interfaces;
+﻿using System.ComponentModel;
+
+using CryptoExchangeImporter.Application.DTOs;
+using CryptoExchangeImporter.Application.Interfaces;
 using CryptoExchangeImporter.Application.Models;
 using CryptoExchangeImporter.Application.Parsing;
 using CryptoExchangeImporter.Domain.Entities;
+using CryptoExchangeImporter.Domain.Enums;
 
 using Microsoft.Extensions.Logging;
 
@@ -73,7 +77,7 @@ public sealed class ExchangeImportService
         return result;
     }
 
-    private static Exchange MapToDomain(Application.DTOs.ExchangeImportDto dto)
+    private static Exchange MapToDomain(ExchangeImportDto dto)
     {
         // Define import timestamp as now => Set createdAt.
         var exchange = new Exchange(dto.Id!, DateTimeOffset.UtcNow);
@@ -100,5 +104,45 @@ public sealed class ExchangeImportService
         exchange.SetOrderBook(orderBook);
 
         return exchange;
+    }
+
+    private static Order MapOrder(OrderBookEntryDto orderBookEntryDto)
+    {
+        var orderDto = orderBookEntryDto.Order;
+
+        return new Order(orderId: orderDto.Id!,
+                         time: orderDto.Time,
+                         type: MapOrderType(orderDto.Type),
+                         kind: MapOrderKind(orderDto.Kind),
+                         amount: orderDto.Amount,
+                         price: orderDto.Price
+        );
+    }
+
+    private static OrderType MapOrderType(string? value)
+    {
+        // Already validatied via ExchangeImporter.ValidateEntries.
+        var trimmed = value?.Trim();
+
+        return trimmed.ToLowerInvariant() switch
+        {
+            "buy" => OrderType.Buy,
+            "sell" => OrderType.Sell,
+            _ => OrderType.Unknown
+        };
+    }
+
+    private static OrderKind MapOrderKind(string? value)
+    {
+        // Already validatied via ExchangeImporter.ValidateEntries.
+        var trimmed = value?.Trim();
+
+        return trimmed.ToLowerInvariant() switch
+        {
+            "limit" => OrderKind.Limit,
+            "market" => OrderKind.Market,
+            "stop" => OrderKind.Stop,
+            _ => OrderKind.Unknown
+        };
     }
 }

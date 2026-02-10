@@ -5,16 +5,17 @@ public sealed class Order
     // EF Core.
     private Order() { }
 
-    internal Order(Guid orderId,
+    public Order(string orderId,
                  DateTimeOffset time,
                  OrderType type,
                  OrderKind kind,
                  decimal amount,
-                 decimal price)
+                 decimal price
+    )
     {
-        if (orderId == Guid.Empty)
+        if (string.IsNullOrWhiteSpace(orderId))
         {
-            throw new ArgumentException("OrderId must not be empty.", nameof(orderId));
+            throw new ArgumentException("ExchangeId must not be empty", nameof(orderId));
         }
 
         if (time > DateTimeOffset.UtcNow)
@@ -43,7 +44,7 @@ public sealed class Order
     public int Id { get; private set; }
 
     // Natural key from JSON (unique).
-    public Guid OrderId { get; private set; } // Data type for type safety, performance and matching JSON data type.
+    public string OrderId { get; private set; } = default!;
 
     // TODO: Check in PR: Time and Type are SQL reserved words.
     public DateTimeOffset Time { get; private set; }
