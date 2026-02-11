@@ -52,16 +52,23 @@ public sealed class ExchangeImportService
             return result;
         }
 
+        var incomingOrderIds = GetIncomingOrderIds(dto)
+                               .Distinct()
+                               .ToList();
+
+        var existingOrderIds = await _repo.GetExistingOrderIdsAsync(incomingOrderIds, cancel);
+
         // Map DTO -> Whole Domain Aggregate.
-        // TODO: Check in PR: .
-        var exchange = MapToDomain(dto);
+        var (exchange, skippedDuplicates) = MapToDomain(dto, existingOrderIds);
+        result.SkippedDuplicateOrders += skippedDuplicates;
+
 
         try
         {
-            var save = await _repo.AddAsync(exchange, cancel);
-            result.ImportedExchanges += save.ImportedExchanges;
-            result.ImportedOrders += save.ImportedOrders;
-            result.SkippedDuplicateOrders += save.SkippedDuplicateOrders;
+            var (importedExchanges, importedOrders, skippedDuplicateOrders) = await _repo.AddAsync(exchange, cancel);
+            result.ImportedExchanges += importedExchanges;
+            result.ImportedOrders += importedOrders;
+            result.SkippedDuplicateOrders += skippedDuplicateOrders;
         }
         catch (Exception ex)
         {
@@ -77,9 +84,38 @@ public sealed class ExchangeImportService
         return result;
     }
 
-    private static Exchange MapToDomain(ExchangeImportDto dto)
+    private static IEnumerable<string> GetIncomingOrderIds(ExchangeImportDto dto)
     {
-        // Define import timestamp as now => Set createdAt.
+        var bids = dto.OrderBook?.Bids;
+        if (bids != null)
+        {
+            foreach (var e in bids)
+            {
+                var id = e?.Order?.Id;
+                if (!string.IsNullOrWhiteSpace(id))
+                {
+                    yield return id.Trim();
+                }
+            }
+        }
+
+        var asks = dto.OrderBook?.Asks;
+        if (asks != null)
+        {
+            foreach (var e in asks)
+            {
+                var id = e?.Order?.Id;
+                if (!string.IsNullOrWhiteSpace(id))
+                {
+                    yield return id.Trim();
+                }
+            }
+        }
+    }
+
+
+    private static (Exchange Exchange, int SkippedDuplicates) MapToDomain(ExchangeImportDto dto, IReadOnlySet<string> existingOrderIds)
+    {
         var exchange = new Exchange(dto.Id!, DateTimeOffset.UtcNow);
 
         var funds = new AvailableFunds(
@@ -88,22 +124,48 @@ public sealed class ExchangeImportService
         );
 
         exchange.SetAvailableFunds(funds);
+
         var orderBook = new OrderBook();
+
+        // Necessary as orderIds can also be duplicates within incoming data itself.
+        var alreadySeenIncomingOrderIds = new HashSet<string>();
+
+        // TODO: Handling overflow necessary for really big incoming data?
+        int skipped = 0;
 
         foreach (var bidDto in dto.OrderBook.Bids!)
         {
+            var orderId = bidDto?.Order?.Id?.Trim();
+            if (string.IsNullOrWhiteSpace(orderId)) { continue; }
+
+            if (existingOrderIds.Contains(orderId) || !alreadySeenIncomingOrderIds.Add(orderId))
+            {
+                skipped++;
+                continue;
+            }
+
             orderBook.AddBid(MapOrder(bidDto));
         }
 
         foreach (var askDto in dto.OrderBook.Asks!)
         {
+            var orderId = askDto?.Order?.Id?.Trim();
+            if (string.IsNullOrWhiteSpace(orderId)) { continue; }
+
+            if (existingOrderIds.Contains(orderId) || !alreadySeenIncomingOrderIds.Add(orderId))
+            {
+                skipped++;
+                continue;
+            }
+
             orderBook.AddAsk(MapOrder(askDto));
         }
 
         exchange.SetOrderBook(orderBook);
 
-        return exchange;
+        return (exchange, skipped);
     }
+
 
     private static Order MapOrder(OrderBookEntryDto orderBookEntryDto)
     {

@@ -24,7 +24,6 @@ public sealed class ExchangesController : Controller
             Euro = x.AvailableFunds?.Euro ?? 0
         }).ToList();
 
-        // TODO: Correct.
         return View(vm);
     }
 

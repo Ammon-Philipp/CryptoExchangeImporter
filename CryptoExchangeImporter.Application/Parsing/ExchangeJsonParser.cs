@@ -1,6 +1,7 @@
 ﻿using System.Text.Json;
 
 using CryptoExchangeImporter.Application.DTOs;
+using CryptoExchangeImporter.Domain.Entities;
 using CryptoExchangeImporter.Domain.Enums;
 
 namespace CryptoExchangeImporter.Application.Parsing;
@@ -94,6 +95,7 @@ public sealed class ExchangeJsonParser : IExchangeJsonParser
             {
                 var raw = o.Type.Trim();
 
+                // TODO: Avoid magic values as Enum values can change. Kept it simple for now, but error-prone.
                 if (!raw.Equals("buy", StringComparison.OrdinalIgnoreCase) &&
                     !raw.Equals("sell", StringComparison.OrdinalIgnoreCase))
                 {
@@ -109,6 +111,7 @@ public sealed class ExchangeJsonParser : IExchangeJsonParser
             {
                 var raw = o.Kind.Trim();
 
+                // TODO: Avoid magic values as Enum values can change. Kept it simple for now, but error-prone.
                 if (!raw.Equals("limit", StringComparison.OrdinalIgnoreCase) &&
                     !raw.Equals("market", StringComparison.OrdinalIgnoreCase) &&
                     !raw.Equals("stop", StringComparison.OrdinalIgnoreCase))

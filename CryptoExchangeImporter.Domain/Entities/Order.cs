@@ -15,7 +15,7 @@ public sealed class Order
     {
         if (string.IsNullOrWhiteSpace(orderId))
         {
-            throw new ArgumentException("ExchangeId must not be empty", nameof(orderId));
+            throw new ArgumentException("Order id must not be empty", nameof(orderId));
         }
 
         if (time > DateTimeOffset.UtcNow)

@@ -14,36 +14,20 @@ public sealed class ExchangeRepository : IExchangeRepository
     public ExchangeRepository(ExchangeDbContext db) => _db = db;
 
     public Task<bool> ExistsAsync(string exchangeId, CancellationToken cancel)
-        => _db.Exchanges.AsNoTracking().AnyAsync(x => x.ExchangeId == exchangeId, cancel);
-
-    #region NeedsRefactoring
-    // TODO: Fix duplication handling.
+        => _db.Exchanges
+              .AsNoTracking()
+              .AnyAsync(x => x.ExchangeId == exchangeId, cancel);
 
     public async Task<AddExchangeResult> AddAsync(Exchange exchange, CancellationToken cancel)
     {
-        // Import whole exchange or nnothin at all.
-        await using var transactionAsync = await _db.Database.BeginTransactionAsync(cancel);
-
         _db.Exchanges.Add(exchange);
+        await _db.SaveChangesAsync(cancel);
 
-        try
-        {
-            var changes = await _db.SaveChangesAsync(cancel);
-            await transactionAsync.CommitAsync(cancel);
-
-            return new AddExchangeResult
-            {
-                ImportedExchanges = 1,
-                ImportedOrders = CountOrders(exchange),
-                SkippedDuplicateOrders = 0
-            };
-        }
-        catch (DbUpdateException)
-        {
-            // TODO: Retry without duplicates.
-            await transactionAsync.RollbackAsync(cancel);
-            throw;
-        }
+        return new AddExchangeResult(
+            1,
+            CountOrders(exchange),
+            0
+        );
     }
 
     public async Task<IReadOnlyList<Exchange>> GetAllAsync(CancellationToken cancel)
@@ -66,7 +50,27 @@ public sealed class ExchangeRepository : IExchangeRepository
             .FirstOrDefaultAsync(x => x.ExchangeId == id, cancel);
 
     private static int CountOrders(Exchange exchange)
-        => (exchange.OrderBook?.Bids?.Count ?? 0) + (exchange.OrderBook?.Asks?.Count ?? 0);
-    
-    #endregion NeedsRefactoring
+    {
+        return (exchange.OrderBook?.Bids?.Count ?? 0) + (exchange.OrderBook?.Asks?.Count ?? 0);
+    }
+
+    public async Task<HashSet<string>> GetExistingOrderIdsAsync(IEnumerable<string> orderIds, CancellationToken cancel)
+    {
+        var ids = orderIds.Where(x => !string.IsNullOrWhiteSpace(x))
+                          .Select(x => x.Trim())
+                          .Distinct()
+                          .ToList();
+
+        if (ids.Count == 0)
+        {
+            return new HashSet<string>();
+        }
+
+        return await _db.Orders
+                        .AsNoTracking()
+                        .Where(o => ids.Contains(o.OrderId))
+                        .Select(o => o.OrderId)
+                        .ToHashSetAsync(cancel);
+    }
+
 }

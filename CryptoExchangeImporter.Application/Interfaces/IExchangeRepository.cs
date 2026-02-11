@@ -12,11 +12,12 @@ public interface IExchangeRepository
     Task<IReadOnlyList<Exchange>> GetAllAsync(CancellationToken cancel);
 
     Task<Exchange?> GetByIdAsync(string id, CancellationToken cancel);
+
+    Task<HashSet<string>> GetExistingOrderIdsAsync(IEnumerable<string> orderIds, CancellationToken cancel);
 }
 
-public sealed class AddExchangeResult
-{
-    public int ImportedExchanges { get; init; }
-    public int ImportedOrders { get; init; }
-    public int SkippedDuplicateOrders { get; init; }
-}
+public sealed record AddExchangeResult(
+    int ImportedExchanges,
+    int ImportedOrders,
+    int SkippedDuplicateOrders
+);
